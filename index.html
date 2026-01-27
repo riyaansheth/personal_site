@@ -1,18 +1,23 @@
 <!DOCTYPE html>
+//hhh
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Riyaan Sheth | Portfolio</title>
   <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
 
-  <header>
-    <h1>Riyaan Sheth</h1>
+  <div id="particles-js"></div>
+
+  <header class="hero reveal">
+    <h1>I am <span id="typing"></span></h1>
     <p>Aspiring Technology Professional</p>
+    <button class="btn" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View My Work</button>
   </header>
 
-  <section class="card">
+  <section class="card reveal" id="about">
     <h2>About Me</h2>
     <p>
       Aspiring technology professional with a strong foundation in software
@@ -21,7 +26,7 @@
     </p>
   </section>
 
-  <section class="card">
+  <section class="card reveal" id="skills">
     <h2>Skills</h2>
     <ul class="grid">
       <li>Java</li>
@@ -29,58 +34,59 @@
       <li>JavaScript & Web Dev</li>
       <li>Linux</li>
       <li>SEO</li>
-      <li>Cloud (Azure)</li>
+      <li>Cloud Azure</li>
       <li>Marketing</li>
     </ul>
   </section>
 
-  <section class="card">
+  <section class="card reveal" id="projects">
     <h2>Experience</h2>
     <ul>
       <li>
         <strong>Robotics Summer Camp Instructor</strong><br>
-        Atlas SkillTech University (2025)<br>
+        Atlas SkillTech University 2025<br>
         Taught robotics, Arduino, C++ and project building
       </li>
       <li>
         <strong>Cloud IT Intern</strong><br>
-        Farz AI Startup (2024)<br>
-        Managed AWS and Azure and reduced cost by 20%
+        Farz AI Startup 2024<br>
+        Managed AWS and Azure and reduced cost by 20 percent
       </li>
       <li>
-        <strong>SEO & Marketing</strong><br>
-        Vidvatta EdTech (2025)<br>
-        Increased website traffic by 30%
+        <strong>SEO and Marketing</strong><br>
+        Vidvatta EdTech 2025<br>
+        Increased website traffic by 30 percent
       </li>
     </ul>
   </section>
 
-  <section class="card">
+  <section class="card reveal">
     <h2>Education</h2>
     <ul>
-      <li>Atlas SkillTech University<br>BTech CSE AI & ML (2024–2028)</li>
-      <li>K.C. College of Science<br>11th–12th (2022–2024)</li>
+      <li>Atlas SkillTech University<br>BTech CSE AI and ML 2024 to 2028</li>
+      <li>K C College of Science<br>11th to 12th 2022 to 2024</li>
     </ul>
   </section>
 
-  <section class="card">
+  <section class="card reveal">
     <h2>Links</h2>
-    <a href="https://www.linkedin.com/in/riyaansheth/" target="_blank">LinkedIn</a><br>
-    <a href="https://github.com/riyaansheth" target="_blank">GitHub</a>
+    <a href="https://www.linkedin.com/in/riyaansheth/" target="_blank" class="btn">LinkedIn</a>
+    <a href="https://github.com/riyaansheth" target="_blank" class="btn">GitHub</a>
   </section>
 
-  <section class="card">
+  <section class="card reveal">
     <h2>My Accomplishments</h2>
     <ul id="accomplishmentList"></ul>
   </section>
 
-  <section class="card admin">
+  <section class="card admin reveal">
     <h2>Exclusive Panel</h2>
     <input type="password" id="adminPass" placeholder="Admin password">
     <textarea id="achievementText" placeholder="Add new accomplishment"></textarea>
-    <button onclick="addAchievement()">Add</button>
+    <button class="btn" onclick="addAchievement()">Add</button>
   </section>
 
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script src="script.js"></script>
 </body>
 </html>
