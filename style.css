@@ -26,22 +26,17 @@ body {
   z-index: -1;
 }
 
-header.hero {
+.hero {
   text-align: center;
-  padding: 100px 20px 60px;
+  padding: 120px 20px 80px;
 }
 
 h1 {
   font-size: 48px;
-  margin: 0;
 }
 
 h2 {
   color: #9ad1ff;
-}
-
-p {
-  line-height: 1.6;
 }
 
 .card {
@@ -74,29 +69,60 @@ li {
   margin-bottom: 10px;
 }
 
-a {
-  color: #7aa2ff;
-  text-decoration: none;
-  margin-right: 10px;
-}
-
-a:hover {
-  text-shadow: 0 0 8px #7aa2ff;
-}
-
 .btn {
+  display: inline-block;
   padding: 12px 28px;
   border-radius: 30px;
   background: #0ea5e9;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
   color: white;
+  text-decoration: none;
+  margin-right: 10px;
+  transition: 0.3s;
 }
 
 .btn:hover {
   transform: scale(1.1);
   box-shadow: 0 10px 30px rgba(14,165,233,0.5);
+}
+
+.resume-section {
+  text-align: center;
+}
+
+.resume-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 20px;
+  padding: 16px 34px;
+  border-radius: 50px;
+  background: linear-gradient(135deg, #0ea5e9, #6366f1);
+  color: white;
+  font-size: 18px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.35s ease;
+  box-shadow: 0 15px 35px rgba(99,102,241,0.35);
+  position: relative;
+  overflow: hidden;
+}
+
+.resume-btn::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent, rgba(255,255,255,0.25), transparent);
+  transform: translateX(-100%);
+  transition: 0.6s;
+}
+
+.resume-btn:hover::before {
+  transform: translateX(100%);
+}
+
+.resume-btn:hover {
+  transform: translateY(-6px) scale(1.05);
+  box-shadow: 0 25px 60px rgba(99,102,241,0.55);
 }
 
 textarea,
@@ -106,8 +132,8 @@ input {
   color: white;
   border: 1px solid rgba(255,255,255,0.1);
   padding: 12px;
-  margin-bottom: 10px;
   border-radius: 8px;
+  margin-bottom: 10px;
 }
 
 .admin {

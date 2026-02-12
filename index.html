@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-//hhh
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Riyaan Sheth | Portfolio</title>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
@@ -14,10 +16,9 @@
   <header class="hero reveal">
     <h1>I am <span id="typing"></span></h1>
     <p>Aspiring Technology Professional</p>
-    <button class="btn" onclick="document.getElementById('projects').scrollIntoView({behavior:'smooth'})">View My Work</button>
   </header>
 
-  <section class="card reveal" id="about">
+  <section class="card reveal">
     <h2>About Me</h2>
     <p>
       Aspiring technology professional with a strong foundation in software
@@ -26,12 +27,12 @@
     </p>
   </section>
 
-  <section class="card reveal" id="skills">
+  <section class="card reveal">
     <h2>Skills</h2>
     <ul class="grid">
       <li>Java</li>
       <li>Python for ML</li>
-      <li>JavaScript & Web Dev</li>
+      <li>JavaScript and Web Dev</li>
       <li>Linux</li>
       <li>SEO</li>
       <li>Cloud Azure</li>
@@ -39,13 +40,13 @@
     </ul>
   </section>
 
-  <section class="card reveal" id="projects">
+  <section class="card reveal">
     <h2>Experience</h2>
     <ul>
       <li>
         <strong>Robotics Summer Camp Instructor</strong><br>
         Atlas SkillTech University 2025<br>
-        Taught robotics, Arduino, C++ and project building
+        Taught robotics Arduino C++ and project building
       </li>
       <li>
         <strong>Cloud IT Intern</strong><br>
@@ -68,10 +69,20 @@
     </ul>
   </section>
 
+  <section class="card reveal resume-section">
+    <h2>Resume</h2>
+    <p>Download my resume for detailed experience and projects</p>
+
+    <a href="resume/Riyaan_Sheth_Resume.pdf" download class="resume-btn">
+      <span class="resume-icon">⬇</span>
+      <span>Download Resume</span>
+    </a>
+  </section>
+
   <section class="card reveal">
     <h2>Links</h2>
-    <a href="https://www.linkedin.com/in/riyaansheth/" target="_blank" class="btn">LinkedIn</a>
-    <a href="https://github.com/riyaansheth" target="_blank" class="btn">GitHub</a>
+    <a class="btn" href="https://www.linkedin.com/in/riyaansheth/" target="_blank">LinkedIn</a>
+    <a class="btn" href="https://github.com/riyaansheth" target="_blank">GitHub</a>
   </section>
 
   <section class="card reveal">
@@ -88,5 +99,6 @@
 
   <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
   <script src="script.js"></script>
+
 </body>
 </html>
