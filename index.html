@@ -29,8 +29,7 @@ a{color:inherit;}
 #ring.grow{width:70px;height:70px;background:rgba(193,0,48,0.08);border-color:var(--burg);}
 
 /* OVERLAYS */
-body::after{content:'';position:fixed;inset:0;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.07) 2px,rgba(0,0,0,0.07) 4px);pointer-events:none;z-index:900;}
-#bgCanvas{position:fixed;inset:0;z-index:0;opacity:0.9;}
+#bgCanvas{position:fixed;inset:0;z-index:0;opacity:0.7;}
 
 /* LOADER */
 #loader{position:fixed;inset:0;z-index:2000;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:transform 1.1s cubic-bezier(.76,0,.24,1);}
@@ -134,24 +133,21 @@ body.ready .hero-corner{opacity:1;transform:none;transition-delay:.8s;}
 
 /* PROJECTS */
 .projs{grid-template-columns:repeat(auto-fill,minmax(360px,1fr));}
-.proj{border:1px solid var(--line);background:rgba(20,16,18,0.5);backdrop-filter:blur(11px);padding:54px 30px 30px;text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden;transition:transform .3s,border-color .3s,box-shadow .4s;will-change:transform;}
-.proj::before{content:'';position:absolute;top:0;left:0;right:0;height:30px;background:radial-gradient(circle 3px at 18px 15px,var(--red) 97%,transparent 100%),radial-gradient(circle 3px at 32px 15px,var(--deep) 97%,transparent 100%),radial-gradient(circle 3px at 46px 15px,var(--burg2) 97%,transparent 100%),linear-gradient(180deg,rgba(193,0,48,0.1),transparent);background-repeat:no-repeat;box-shadow:inset 0 -1px 0 var(--line);pointer-events:none;}
+.proj{border:1px solid var(--line);background:rgba(20,16,18,0.4);backdrop-filter:blur(11px);padding:30px;text-decoration:none;color:inherit;display:block;position:relative;overflow:hidden;transition:border-color .3s,box-shadow .4s;}
 .proj::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--burg),var(--burg2));transform:scaleX(0);transform-origin:left;transition:transform .4s;}
-.proj:hover{border-color:var(--line2);box-shadow:0 30px 70px -34px rgba(193,0,48,0.6);}
+.proj:hover{border-color:var(--line2);}
 .proj:hover::after{transform:scaleX(1);}
-.proj .num{position:absolute;top:42px;right:26px;font-family:var(--hud);font-weight:900;font-size:2.6rem;color:rgba(225,37,78,0.4);text-shadow:0 0 18px rgba(193,0,48,.35);transition:color .3s,text-shadow .3s;line-height:1;}
-.proj:hover .num{color:rgba(225,37,78,0.8);text-shadow:0 0 28px rgba(225,37,78,.6);}
-.proj .arrow{position:absolute;top:46px;left:26px;color:var(--muted);font-size:1.1rem;transition:all .3s;}
+.proj .num{position:absolute;top:30px;left:30px;font-family:var(--mono);font-size:.82rem;color:var(--burg2);letter-spacing:.14em;line-height:1;}
+.proj .arrow{position:absolute;top:28px;right:28px;color:var(--muted);font-size:1.1rem;transition:all .3s;}
 .proj:hover .arrow{color:var(--burg2);transform:translate(3px,-3px);}
-.proj .pn{font-family:var(--hud);font-weight:700;font-size:.95rem;letter-spacing:.06em;margin:6px 0 12px;transition:color .3s;}
+.proj .pn{font-family:var(--hud);font-weight:700;font-size:.95rem;letter-spacing:.06em;margin:30px 0 12px;transition:color .3s;}
 .proj:hover .pn{color:var(--burg2);}
 .proj .pd{font-size:.88rem;color:var(--muted);line-height:1.7;font-weight:300;margin-bottom:18px;}
 .archive .proj{opacity:.5;filter:saturate(.45);}
 .archive .proj:hover{opacity:1;filter:none;}
 
 /* EXPERIENCE */
-.exp{display:flex;flex-direction:column;border:1px solid var(--line);background:rgba(20,16,18,0.4);backdrop-filter:blur(10px);position:relative;padding:48px 34px 10px;}
-.exp::before{content:'';position:absolute;top:0;left:0;right:0;height:30px;background:radial-gradient(circle 3px at 18px 15px,var(--red) 97%,transparent 100%),radial-gradient(circle 3px at 32px 15px,var(--deep) 97%,transparent 100%),radial-gradient(circle 3px at 46px 15px,var(--burg2) 97%,transparent 100%),linear-gradient(180deg,rgba(193,0,48,0.1),transparent);background-repeat:no-repeat;box-shadow:inset 0 -1px 0 var(--line);}
+.exp{display:flex;flex-direction:column;border:1px solid var(--line);background:rgba(20,16,18,0.35);backdrop-filter:blur(10px);position:relative;padding:14px 34px;}
 .xitem{display:grid;grid-template-columns:130px 2px 1fr;gap:0 30px;padding:32px 0;border-bottom:1px solid rgba(193,0,48,0.1);}
 .xitem:last-child{border-bottom:none;}
 .xdate{text-align:right;font-family:var(--mono);font-size:.66rem;color:var(--burg2);letter-spacing:.12em;padding-top:3px;}
@@ -190,8 +186,12 @@ footer .ac{color:var(--burg2);}
 
 /* MOTION UTILS */
 @keyframes pulse{0%,100%{opacity:1;}50%{opacity:.35;}}
-.reveal{opacity:0;filter:blur(8px);transform:translateY(40px);transition:opacity .8s ease,filter .8s ease,transform .8s cubic-bezier(.2,.7,.2,1);}
-.reveal.in{opacity:1;filter:none;transform:none;}
+.reveal{opacity:0;filter:blur(8px);transition:opacity .8s ease,filter .8s ease,transform .8s cubic-bezier(.2,.7,.2,1);}
+.reveal:not(.tilt){transform:translateY(40px);}
+.reveal.in{opacity:1;filter:none;}
+.reveal:not(.tilt).in{transform:none;}
+.tilt{transform:perspective(820px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg));transform-style:preserve-3d;transition:transform .18s cubic-bezier(.2,.7,.2,1),border-color .3s,box-shadow .4s,opacity .8s ease,filter .8s ease;will-change:transform;}
+.tilt:hover{box-shadow:0 36px 80px -26px rgba(193,0,48,0.6);z-index:5;}
 #scroller{will-change:transform;transform-origin:50% 0;backface-visibility:hidden;}
 
 @media(max-width:860px){
@@ -214,20 +214,20 @@ footer .ac{color:var(--burg2);}
 <canvas id="bgCanvas"></canvas>
 
 <div id="loader">
-  <div class="ld-tag">Initializing System</div>
+  <div class="ld-tag">Loading</div>
   <div class="ld-num"><span id="ld-num">0</span><span>%</span></div>
   <div class="ld-bar-wrap"><div id="ld-bar"></div></div>
   <div class="ld-lines" id="ld-lines"></div>
 </div>
 
 <nav>
-  <div class="nav-id">RS // PORTFOLIO SYSTEM</div>
+  <div class="nav-id">RIYAAN SHETH</div>
   <ul class="nav-links">
-    <li><a href="#about">Profile</a></li>
-    <li><a href="#skills">Systems</a></li>
-    <li><a href="#builds">Builds</a></li>
-    <li><a href="#log">Log</a></li>
-    <li><a href="#contact">Uplink</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#builds">Work</a></li>
+    <li><a href="#log">Experience</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
   <div class="nav-status"><div class="dot"></div>AVAILABLE FOR HIRE</div>
 </nav>
@@ -236,9 +236,7 @@ footer .ac{color:var(--burg2);}
 
 <section id="hero">
   <canvas id="stage"></canvas>
-  <div class="hero-corner hc-tl">LAT 19.0760&deg; N<br/>LON 72.8777&deg; E</div>
-  <div class="hero-corner hc-tr">OPERATOR // ONLINE<br/>BUILD v3.0</div>
-  <div class="hero-corner hc-bl">[ DRAG THE CORE ]</div>
+  <div class="hero-corner hc-bl">drag to rotate</div>
   <div class="hero-content">
     <div class="hero-kicker">Full-Stack Developer / AI Builder</div>
     <h1 class="hero-name">
@@ -261,7 +259,7 @@ footer .ac{color:var(--burg2);}
 </div>
 
 <section id="about" class="sec">
-  <div class="sec-head reveal"><span class="sec-idx">01</span><h2 class="sec-title" data-scramble>OPERATOR <span class="ac">PROFILE</span></h2><div class="sec-line"></div></div>
+  <div class="sec-head reveal"><span class="sec-idx">01</span><h2 class="sec-title" data-scramble>ABOUT <span class="ac">ME</span></h2><div class="sec-line"></div></div>
   <div class="about">
     <div>
       <p class="big reveal">I'm a <b>Computer Science undergraduate</b> at Atlas SkillTech University on a mission to build things that matter. I don't wait for lectures. I build, ship, and learn by doing.</p>
@@ -281,7 +279,7 @@ footer .ac{color:var(--burg2);}
 </section>
 
 <section id="skills" class="sec">
-  <div class="sec-head reveal"><span class="sec-idx">02</span><h2 class="sec-title" data-scramble>CAPABILITY <span class="ac">SYSTEMS</span></h2><div class="sec-line"></div></div>
+  <div class="sec-head reveal"><span class="sec-idx">02</span><h2 class="sec-title" data-scramble>SKILLS &amp; <span class="ac">TOOLS</span></h2><div class="sec-line"></div></div>
   <div class="grid skills">
     <div class="skill reveal"><div class="ico">&#9883;</div><div class="nm">FRONTEND</div><div class="lv">Proficient</div><div class="sbar"><i style="width:80%"></i></div><div class="tags"><span class="tag">React.js</span><span class="tag">JavaScript</span><span class="tag">HTML/CSS</span></div></div>
     <div class="skill reveal"><div class="ico">&#128421;</div><div class="nm">BACKEND</div><div class="lv">Proficient</div><div class="sbar"><i style="width:75%"></i></div><div class="tags"><span class="tag">Node.js</span><span class="tag">Flask</span><span class="tag">MySQL</span><span class="tag">SQLite</span></div></div>
@@ -314,7 +312,7 @@ footer .ac{color:var(--burg2);}
       <div class="tags"><span class="tag">Python</span><span class="tag">Google API</span><span class="tag">LLM</span><span class="tag">Automation</span></div>
     </a>
   </div>
-  <div class="sec-head reveal" style="margin-top:80px"><span class="sec-idx">03.B</span><h2 class="sec-title" data-scramble>ARCHIVE // <span class="ac">OFFLINE</span></h2><div class="sec-line"></div></div>
+  <div class="sec-head reveal" style="margin-top:80px"><span class="sec-idx">03.B</span><h2 class="sec-title" data-scramble>ARCHIVE <span class="ac">BUILDS</span></h2><div class="sec-line"></div></div>
   <div class="grid projs archive">
     <a href="https://github.com/riyaansheth" target="_blank" class="proj reveal">
       <div class="num">04</div><div class="arrow">&#8599;</div>
@@ -338,7 +336,7 @@ footer .ac{color:var(--burg2);}
 </section>
 
 <section id="log" class="sec">
-  <div class="sec-head reveal"><span class="sec-idx">04</span><h2 class="sec-title" data-scramble>MISSION <span class="ac">LOG</span></h2><div class="sec-line"></div></div>
+  <div class="sec-head reveal"><span class="sec-idx">04</span><h2 class="sec-title" data-scramble>EXPERI<span class="ac">ENCE</span></h2><div class="sec-line"></div></div>
   <div class="exp reveal">
     <div class="xitem">
       <div class="xdate">NOW</div><div class="xcon"><div class="xnode"></div><div class="xtrack"></div></div>
@@ -360,7 +358,7 @@ footer .ac{color:var(--burg2);}
 </section>
 
 <section id="wins" class="sec">
-  <div class="sec-head reveal"><span class="sec-idx">05</span><h2 class="sec-title" data-scramble>COMMEN<span class="ac">DATIONS</span></h2><div class="sec-line"></div></div>
+  <div class="sec-head reveal"><span class="sec-idx">05</span><h2 class="sec-title" data-scramble>ACHIEVE<span class="ac">MENTS</span></h2><div class="sec-line"></div></div>
   <div class="grid achs">
     <div class="ach reveal"><span class="ico">&#127942;</span><div class="an">MUMBAI HACKS 2024 &amp; 2025</div><div class="ai">Competed in two consecutive editions of Mumbai's flagship student hackathon, shipping real products under pressure.</div></div>
     <div class="ach reveal"><span class="ico">&#129302;</span><div class="an">GEN AI GOOGLE HACKATHON 2025</div><div class="ai">Participated in Google's generative AI hackathon, building LLM-integrated solutions and AI-powered products.</div></div>
@@ -370,7 +368,7 @@ footer .ac{color:var(--burg2);}
 </section>
 
 <section id="contact" class="sec">
-  <div class="ct-big reveal"><span class="o">INITIATE</span><span class="f">CONTACT</span></div>
+  <div class="ct-big reveal"><span class="o">LET'S</span><span class="f">TALK</span></div>
   <p class="ct-sub reveal">BASED IN MUMBAI &nbsp;//&nbsp; OPERATING GLOBALLY &nbsp;//&nbsp; OPEN FOR FREELANCE</p>
   <div class="ct-grid reveal">
     <a href="mailto:riyaansheth@gmail.com" class="ct-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m2 7 10 7 10-7"/></svg>RIYAANSHETH@GMAIL.COM</a>
@@ -402,7 +400,7 @@ document.querySelectorAll('a,button,.proj,.skill,.ach').forEach(el=>{
 // ===== LOADER =====
 (function(){
   const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader');
-  const msgs=['> booting interface...','> loading 3D core...','> establishing uplink...','> systems nominal'];
+  const msgs=['loading visuals','preparing experience','almost ready','welcome'];
   let p=0,li=0;
   function step(){
     p+=Math.random()*9+4; if(p>100)p=100;
@@ -505,6 +503,15 @@ document.querySelectorAll('.btn').forEach(b=>{
   b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*0.3}px,${(e.clientY-r.top-r.height/2)*0.45}px)`;});
   b.addEventListener('pointerleave',()=>{b.style.transform='';});
 });
+
+// ===== CARD TILT =====
+if(!matchMedia('(hover:none)').matches){
+  document.querySelectorAll('.proj,.skill,.ach').forEach(el=>{
+    el.classList.add('tilt');
+    el.addEventListener('mousemove',e=>{const r=el.getBoundingClientRect();const px=(e.clientX-r.left)/r.width,py=(e.clientY-r.top)/r.height;el.style.setProperty('--ry',((px-.5)*15).toFixed(2)+'deg');el.style.setProperty('--rx',((.5-py)*15).toFixed(2)+'deg');});
+    el.addEventListener('mouseleave',()=>{el.style.setProperty('--rx','0deg');el.style.setProperty('--ry','0deg');});
+  });
+}
 
 // ===== VELOCITY SKEW + PARALLAX =====
 (function(){
