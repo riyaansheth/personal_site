@@ -225,6 +225,14 @@ footer .lit { color:var(--cyan); }
 .hud-header-line,.hud-header-line2{background-size:200% 100%;animation:sheen 6s linear infinite;}
 @keyframes sheen{0%{background-position:200% 0;}100%{background-position:-200% 0;}}
 
+/* holo-core 3D viewport */
+.holo-core{position:relative;width:100%;height:250px;overflow:hidden;cursor:none;}
+.holo-core canvas{display:block;}
+.holo-core::after{content:'';position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle at 50% 50%,transparent 56%,rgba(0,212,255,0.06) 100%),repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.06) 3px,rgba(0,0,0,0.06) 4px);}
+.holo-core::before{content:'◢ DRAG TO ROTATE ◣';position:absolute;bottom:6px;left:0;right:0;text-align:center;font-family:var(--font-mono);font-size:.5rem;color:var(--cyan);opacity:.35;letter-spacing:.18em;z-index:2;pointer-events:none;}
+.bar-fill{transition:width 1.1s cubic-bezier(.2,.7,.2,1);}
+.btn-hud{will-change:transform;}
+
 @media(max-width:768px){
   .tilt{transform:none!important;}
   .exp-list{padding:42px 16px 8px;}
@@ -280,27 +288,8 @@ footer .lit { color:var(--cyan); }
       </div>
     </div>
     <div class="hero-radar">
-      <div class="radar-widget" data-label="SYSTEM RADAR">
-        <svg class="radar-svg" viewBox="0 0 200 160" xmlns="http://www.w3.org/2000/svg">
-          <line x1="0" y1="80" x2="200" y2="80" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
-          <line x1="100" y1="0" x2="100" y2="160" stroke="rgba(0,212,255,0.1)" stroke-width="1"/>
-          <ellipse cx="100" cy="80" rx="90" ry="72" fill="none" stroke="rgba(0,212,255,0.07)" stroke-width="1"/>
-          <ellipse cx="100" cy="80" rx="60" ry="48" fill="none" stroke="rgba(0,212,255,0.07)" stroke-width="1"/>
-          <ellipse cx="100" cy="80" rx="30" ry="24" fill="none" stroke="rgba(0,212,255,0.07)" stroke-width="1"/>
-          <path d="M100,80 L190,80 A90,72 0 0,0 100,8 Z" fill="url(#sweepGrad)" opacity="0.3" transform-origin="100 80">
-            <animateTransform attributeName="transform" type="rotate" from="0 100 80" to="360 100 80" dur="4s" repeatCount="indefinite"/>
-          </path>
-          <circle cx="145" cy="52" r="3" fill="#00d4ff" opacity="0.8"><animate attributeName="opacity" values="0.8;0.2;0.8" dur="2.1s" repeatCount="indefinite"/></circle>
-          <circle cx="68" cy="110" r="2" fill="#ff6b00" opacity="0.7"><animate attributeName="opacity" values="0.7;0.15;0.7" dur="1.7s" repeatCount="indefinite"/></circle>
-          <circle cx="160" cy="100" r="2.5" fill="#00fff7" opacity="0.6"><animate attributeName="opacity" values="0.6;0.1;0.6" dur="3s" repeatCount="indefinite"/></circle>
-          <circle cx="100" cy="80" r="4" fill="#ff6b00" opacity="1"/>
-          <defs>
-            <radialGradient id="sweepGrad" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(100,80) scale(90,72)">
-              <stop offset="0%" stop-color="#00d4ff" stop-opacity=".4"/>
-              <stop offset="100%" stop-color="#00d4ff" stop-opacity="0"/>
-            </radialGradient>
-          </defs>
-        </svg>
+      <div class="radar-widget" data-label="HOLO CORE // LIVE">
+        <div id="holo" class="holo-core"></div>
       </div>
       <div class="radar-widget" data-label="METRICS">
         <div class="stat-row"><div><div class="stat-lbl">INTERNSHIPS</div><div class="bar-track"><div class="bar-fill" style="width:90%"></div></div></div><div class="stat-val">4+</div></div>
@@ -458,6 +447,7 @@ footer .lit { color:var(--cyan); }
   <span>SYSTEM <span class="lit">ONLINE</span> // MUMBAI, INDIA</span>
 </footer>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
 // CURSOR
 const cur=document.getElementById('cur'),ring=document.getElementById('cur-ring');
@@ -520,6 +510,64 @@ if(!isTouch){
     });
   });
 }
+
+// ===== HOLO CORE (Three.js) =====
+(function(){
+  const host=document.getElementById('holo');
+  if(!host||!window.THREE||!host.clientWidth) return;
+  const W=host.clientWidth,H=host.clientHeight;
+  const scene=new THREE.Scene();
+  const cam=new THREE.PerspectiveCamera(50,W/H,0.1,100); cam.position.z=3.7;
+  const rnd=new THREE.WebGLRenderer({alpha:true,antialias:true});
+  rnd.setPixelRatio(Math.min(devicePixelRatio,2)); rnd.setSize(W,H); host.appendChild(rnd.domElement);
+  const grp=new THREE.Group(); scene.add(grp);
+  const geo=new THREE.IcosahedronGeometry(1.15,2);
+  const pos=geo.attributes.position, base=pos.array.slice();
+  grp.add(new THREE.Mesh(geo,new THREE.MeshBasicMaterial({color:0x00d4ff,wireframe:true,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,depthWrite:false})));
+  grp.add(new THREE.Points(geo,new THREE.PointsMaterial({color:0x00fff7,size:0.05,transparent:true,opacity:0.9,blending:THREE.AdditiveBlending,depthWrite:false})));
+  const outer=new THREE.Mesh(new THREE.IcosahedronGeometry(1.75,1),new THREE.MeshBasicMaterial({color:0xff6b00,wireframe:true,transparent:true,opacity:0.16,blending:THREE.AdditiveBlending,depthWrite:false})); scene.add(outer);
+  const N=150,arr=new Float32Array(N*3);
+  for(let i=0;i<N;i++){const r=2.1+Math.random()*1.5,a=Math.random()*6.283,y=(Math.random()-0.5)*2.6;arr[i*3]=Math.cos(a)*r;arr[i*3+1]=y;arr[i*3+2]=Math.sin(a)*r;}
+  const fg=new THREE.BufferGeometry(); fg.setAttribute('position',new THREE.BufferAttribute(arr,3));
+  const field=new THREE.Points(fg,new THREE.PointsMaterial({color:0x00d4ff,size:0.03,transparent:true,opacity:0.5,blending:THREE.AdditiveBlending,depthWrite:false})); scene.add(field);
+  let tx=0,ty=0,rx=0,spin=0,t=0,drag=false,lx=0;
+  host.addEventListener('pointermove',e=>{const r=host.getBoundingClientRect();tx=(e.clientX-r.left)/r.width-0.5;ty=(e.clientY-r.top)/r.height-0.5;});
+  host.addEventListener('pointerdown',e=>{drag=true;lx=e.clientX;});
+  addEventListener('pointerup',()=>drag=false);
+  addEventListener('pointermove',e=>{if(drag){spin+=(e.clientX-lx)*0.01;lx=e.clientX;}});
+  function nz(x,y,z,t){return Math.sin(x*1.8+t)*Math.cos(y*1.9-t*0.8)*Math.sin(z*2.1+t*0.6);}
+  (function loop(){
+    t+=0.012;
+    for(let i=0;i<base.length;i+=3){const x=base[i],y=base[i+1],z=base[i+2],l=Math.hypot(x,y,z)||1;const d=1+0.11*nz(x/l,y/l,z/l,t)+0.04*Math.sin(t*2);pos.array[i]=x*d;pos.array[i+1]=y*d;pos.array[i+2]=z*d;}
+    pos.needsUpdate=true;
+    rx+=(ty*0.6-rx)*0.06;
+    grp.rotation.x=rx; grp.rotation.y+=0.004+spin; grp.rotation.z=tx*0.25; spin*=0.93;
+    const s=1+0.03*Math.sin(t*1.3); grp.scale.set(s,s,s);
+    outer.rotation.y-=0.0028; outer.rotation.x=-rx*0.5; field.rotation.y+=0.001;
+    rnd.render(scene,cam); requestAnimationFrame(loop);
+  })();
+  addEventListener('resize',()=>{const w=host.clientWidth,h=host.clientHeight;if(!w)return;rnd.setSize(w,h);cam.aspect=w/h;cam.updateProjectionMatrix();});
+})();
+
+// ===== METRIC COUNT-UP + BAR FILL =====
+function countUp(el){const m=el.textContent.trim().match(/^(\d+)(.*)$/);if(!m)return;const tg=+m[1],sf=m[2],st=performance.now();(function go(n){const p=Math.min((n-st)/1100,1),e=1-Math.pow(1-p,3);el.textContent=Math.round(e*tg)+sf;if(p<1)requestAnimationFrame(go);})(st);}
+const mObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){countUp(e.target);mObs.unobserve(e.target);}}),{threshold:0.5});
+document.querySelectorAll('.stat-val').forEach(el=>mObs.observe(el));
+document.querySelectorAll('.bar-fill').forEach(b=>{b.dataset.w=b.style.width;b.style.width='0';});
+const bObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.style.width=e.target.dataset.w;bObs.unobserve(e.target);}}),{threshold:0.2});
+document.querySelectorAll('.bar-fill').forEach(b=>bObs.observe(b));
+
+// ===== TEXT SCRAMBLE DECODE =====
+const GLYPH='ABCDEFGHJKLMNPQRSTUVWXYZ0123456789/<>#*+';
+function scramble(el){const fin=el.dataset.txt;let f=0;const D=26;(function go(){let o='';for(let i=0;i<fin.length;i++){o+=(i<f*fin.length/D)?fin[i]:(fin[i]===' '?' ':GLYPH[Math.floor(Math.random()*GLYPH.length)]);}el.textContent=o;if(f++<=D)requestAnimationFrame(go);else el.textContent=fin;})();}
+const sObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){scramble(e.target);sObs.unobserve(e.target);}}),{threshold:0.6});
+document.querySelectorAll('.hud-header-title').forEach(el=>{el.dataset.txt=el.textContent;sObs.observe(el);});
+
+// ===== MAGNETIC BUTTONS =====
+document.querySelectorAll('.btn-hud').forEach(b=>{
+  b.addEventListener('pointermove',e=>{const r=b.getBoundingClientRect();b.style.transform=`translate(${(e.clientX-r.left-r.width/2)*0.25}px,${(e.clientY-r.top-r.height/2)*0.4}px)`;});
+  b.addEventListener('pointerleave',()=>{b.style.transform='';});
+});
 </script>
 </body>
 </html>
