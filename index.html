@@ -16,17 +16,10 @@
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;cursor:none;}
+body{background:var(--bg);color:var(--text);font-family:var(--body);overflow-x:hidden;}
 body.loading{overflow:hidden;height:100vh;}
 a{color:inherit;}
 ::selection{background:var(--burg);color:#fff;}
-
-/* CURSOR */
-#cur{position:fixed;width:14px;height:14px;pointer-events:none;z-index:9999;transform:translate(-50%,-50%);}
-#cur::before{content:'';position:absolute;inset:0;border:1px solid var(--burg2);transform:rotate(45deg);}
-#cur::after{content:'';position:absolute;width:4px;height:4px;background:var(--burg2);top:50%;left:50%;transform:translate(-50%,-50%);border-radius:50%;}
-#ring{position:fixed;width:42px;height:42px;border:1px solid rgba(193,0,48,0.4);border-radius:50%;pointer-events:none;z-index:9998;transform:translate(-50%,-50%);transition:width .25s,height .25s,background .25s,border-color .25s;}
-#ring.grow{width:70px;height:70px;background:rgba(193,0,48,0.08);border-color:var(--burg);}
 
 /* OVERLAYS */
 #bgCanvas{position:fixed;inset:0;z-index:0;opacity:0.7;}
@@ -209,8 +202,6 @@ footer .ac{color:var(--burg2);}
 </head>
 <body class="loading">
 
-<div id="cur"></div>
-<div id="ring"></div>
 <canvas id="bgCanvas"></canvas>
 
 <div id="loader">
@@ -387,16 +378,6 @@ footer .ac{color:var(--burg2);}
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ===== CURSOR =====
-const cur=document.getElementById('cur'),ring=document.getElementById('ring');
-let mx=innerWidth/2,my=innerHeight/2,rx=mx,ry=my;
-addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
-(function tick(){cur.style.left=mx+'px';cur.style.top=my+'px';rx+=(mx-rx)*.14;ry+=(my-ry)*.14;ring.style.left=rx+'px';ring.style.top=ry+'px';requestAnimationFrame(tick);})();
-document.querySelectorAll('a,button,.proj,.skill,.ach').forEach(el=>{
-  el.addEventListener('mouseenter',()=>ring.classList.add('grow'));
-  el.addEventListener('mouseleave',()=>ring.classList.remove('grow'));
-});
-
 // ===== LOADER =====
 (function(){
   const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader');
