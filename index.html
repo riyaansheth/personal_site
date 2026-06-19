@@ -63,6 +63,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 30px;height:62px;d
 /* SOUND TOGGLE */
 .sound-btn{position:fixed;bottom:22px;right:22px;z-index:600;width:44px;height:44px;border:1px solid var(--line);background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);border-radius:50%;display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:border-color .25s,background .25s;}
 .sound-btn:hover{border-color:var(--burg2);background:rgba(193,0,48,0.1);}
+.sound-btn.pending{animation:pulse 1.7s ease infinite;}
 .sound-btn span{width:3px;height:6px;background:var(--burg2);border-radius:2px;}
 .sound-btn.on span{animation:eq .9s ease-in-out infinite;}
 .sound-btn.on span:nth-child(2){animation-delay:.18s;}
@@ -414,10 +415,11 @@ if(window.Lenis){
 
 // ===== AUDIO =====
 const song=document.getElementById('song'),soundBtn=document.getElementById('sound');
-let audioOn=false,started=false;const TARGET_VOL=0.32;
+let audioOn=false,started=false,unlockArmed=false;const TARGET_VOL=0.32;
 song.loop=true;song.volume=TARGET_VOL;
+soundBtn.classList.add('pending');
 function fadeVol(to){(function s(){const d=to-song.volume;if(Math.abs(d)<0.012){song.volume=Math.max(0,Math.min(1,to));return;}song.volume=Math.max(0,Math.min(1,song.volume+d*0.08));requestAnimationFrame(s);})();}
-function markOn(){audioOn=true;started=true;soundBtn.classList.add('on');}
+function markOn(){audioOn=true;started=true;soundBtn.classList.add('on');soundBtn.classList.remove('pending');}
 const UEV=['touchstart','pointerdown','keydown'];
 function unlock(e){
   if(started){removeUnlock();return;}
@@ -425,8 +427,8 @@ function unlock(e){
   song.muted=false;song.volume=0;
   song.play().then(()=>{markOn();fadeVol(TARGET_VOL);removeUnlock();}).catch(()=>{});
 }
-function addUnlock(){UEV.forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));}
-function removeUnlock(){UEV.forEach(ev=>document.removeEventListener(ev,unlock));}
+function addUnlock(){if(unlockArmed)return;unlockArmed=true;UEV.forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));}
+function removeUnlock(){unlockArmed=false;UEV.forEach(ev=>document.removeEventListener(ev,unlock));}
 function enableAudio(){
   song.muted=false;song.volume=0;
   const pr=song.play();
@@ -438,6 +440,8 @@ function toggleAudio(){
   else{song.muted=false;song.volume=0;song.play().then(()=>{markOn();fadeVol(TARGET_VOL);}).catch(()=>{});}
 }
 soundBtn.addEventListener('click',e=>{e.stopPropagation();toggleAudio();});
+// arm first-interaction unlock from the start so a cold load still starts on first tap/click
+addUnlock();
 
 // ===== LOADER =====
 (function(){
