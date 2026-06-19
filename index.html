@@ -47,9 +47,6 @@ a{color:inherit;}
 .ld-bar-wrap{width:min(440px,70vw);height:2px;background:rgba(193,0,48,0.15);margin-top:30px;overflow:hidden;}
 #ld-bar{height:100%;width:0;background:linear-gradient(90deg,var(--deep),var(--burg2));}
 .ld-lines{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.12em;margin-top:24px;text-align:center;line-height:1.9;min-height:60px;}
-.ld-enter{font-family:var(--hud);font-weight:700;font-size:.82rem;letter-spacing:.24em;color:var(--burg2);text-transform:uppercase;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;}
-.ld-enter.show{opacity:1;transform:none;animation:pulse 1.9s ease infinite;}
-#loader.enterable{cursor:pointer;}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 30px;height:62px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(20,20,20,0.7);backdrop-filter:blur(14px);}
@@ -231,7 +228,6 @@ footer .ac{color:var(--burg2);}
   <div class="ld-num"><span id="ld-num">0</span><span>%</span></div>
   <div class="ld-bar-wrap"><div id="ld-bar"></div></div>
   <div class="ld-lines" id="ld-lines"></div>
-  <div class="ld-enter" id="ld-enter">&#9654; Click to enter</div>
 </div>
 
 <nav>
@@ -419,24 +415,31 @@ if(window.Lenis){
 // ===== AUDIO =====
 const song=document.getElementById('song'),soundBtn=document.getElementById('sound');
 let audioOn=false;const TARGET_VOL=0.32;
-song.loop=true;song.volume=0;
+song.loop=true;song.volume=TARGET_VOL;
+// warm up with muted autoplay (allowed by browsers) so we can unmute instantly when loading ends
+song.muted=true;song.play().catch(()=>{});
 function fadeVol(to){(function s(){const d=to-song.volume;if(Math.abs(d)<0.012){song.volume=Math.max(0,Math.min(1,to));return;}song.volume=Math.max(0,Math.min(1,song.volume+d*0.08));requestAnimationFrame(s);})();}
-function audioPlay(){return song.play().then(()=>{audioOn=true;soundBtn.classList.add('on');fadeVol(TARGET_VOL);});}
+function armGesture(){
+  const evs=['pointerdown','keydown','touchstart','wheel'];
+  const once=()=>{song.muted=false;song.play().then(()=>{audioOn=true;soundBtn.classList.add('on');song.volume=0;fadeVol(TARGET_VOL);}).catch(()=>{});evs.forEach(ev=>document.removeEventListener(ev,once));};
+  evs.forEach(ev=>document.addEventListener(ev,once,{once:true}));
+}
+function startAudio(){
+  song.muted=false;song.volume=0;
+  const pr=song.play();
+  if(pr&&pr.then){pr.then(()=>{audioOn=true;soundBtn.classList.add('on');fadeVol(TARGET_VOL);}).catch(()=>{});}
+  else{audioOn=true;soundBtn.classList.add('on');fadeVol(TARGET_VOL);}
+  armGesture();
+}
 function toggleAudio(){
   if(audioOn){fadeVol(0);setTimeout(()=>{if(!audioOn)song.pause();},450);audioOn=false;soundBtn.classList.remove('on');}
-  else{audioPlay().catch(()=>{});}
+  else{song.muted=false;song.play().then(()=>{audioOn=true;soundBtn.classList.add('on');song.volume=0;fadeVol(TARGET_VOL);}).catch(()=>{});}
 }
 soundBtn.addEventListener('click',e=>{e.stopPropagation();toggleAudio();});
-function tryAutoplay(){
-  audioPlay().catch(()=>{
-    const once=()=>{audioPlay().catch(()=>{});document.removeEventListener('pointerdown',once);document.removeEventListener('keydown',once);};
-    document.addEventListener('pointerdown',once);document.addEventListener('keydown',once);
-  });
-}
 
 // ===== LOADER =====
 (function(){
-  const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader'),enterEl=document.getElementById('ld-enter');
+  const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader');
   const msgs=['loading visuals','preparing experience','almost ready','welcome'];
   let p=0,li=0;
   function step(){
@@ -445,18 +448,10 @@ function tryAutoplay(){
     const want=Math.min(msgs.length,Math.ceil(p/100*msgs.length));
     while(li<want){lines.innerHTML+=msgs[li]+'<br/>';li++;}
     if(p<100)setTimeout(step,100+Math.random()*70);
-    else setTimeout(ready,350);
-  }
-  function ready(){
-    enterEl.classList.add('show');
-    loader.classList.add('enterable');
-    loader.addEventListener('click',enter,{once:true});
-  }
-  function enter(){
-    audioPlay().catch(()=>{});
-    done();
+    else setTimeout(done,400);
   }
   function done(){
+    startAudio();
     document.body.classList.add('ready');
     loader.classList.add('hide');
     setTimeout(()=>{loader.style.display='none';document.body.classList.remove('loading');if(lenis)lenis.start();},1150);
