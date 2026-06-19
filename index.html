@@ -60,6 +60,15 @@ nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 30px;height:62px;d
 .nav-status{font-family:var(--mono);font-size:.64rem;color:var(--burg2);letter-spacing:.12em;display:flex;align-items:center;gap:8px;}
 .dot{width:6px;height:6px;background:var(--burg2);border-radius:50%;animation:pulse 1.5s ease infinite;}
 
+/* SOUND TOGGLE */
+.sound-btn{position:fixed;bottom:22px;right:22px;z-index:600;width:44px;height:44px;border:1px solid var(--line);background:rgba(20,20,20,0.6);backdrop-filter:blur(10px);border-radius:50%;display:flex;align-items:center;justify-content:center;gap:3px;cursor:pointer;transition:border-color .25s,background .25s;}
+.sound-btn:hover{border-color:var(--burg2);background:rgba(193,0,48,0.1);}
+.sound-btn span{width:3px;height:6px;background:var(--burg2);border-radius:2px;}
+.sound-btn.on span{animation:eq .9s ease-in-out infinite;}
+.sound-btn.on span:nth-child(2){animation-delay:.18s;}
+.sound-btn.on span:nth-child(3){animation-delay:.36s;}
+@keyframes eq{0%,100%{height:6px;}50%{height:18px;}}
+
 /* HERO */
 #hero{position:relative;min-height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden;}
 #stage{position:absolute;inset:0;z-index:1;}
@@ -233,6 +242,9 @@ footer .ac{color:var(--burg2);}
   <div class="nav-status"><div class="dot"></div>AVAILABLE FOR HIRE</div>
 </nav>
 
+<audio id="song" loop preload="auto"><source src="assets/song.mp3" type="audio/mpeg"></audio>
+<button id="sound" class="sound-btn" aria-label="Toggle music"><span></span><span></span><span></span></button>
+
 <div id="scroller">
 
 <section id="hero">
@@ -400,6 +412,24 @@ if(window.Lenis){
   });
 }
 
+// ===== AUDIO =====
+const song=document.getElementById('song'),soundBtn=document.getElementById('sound');
+let audioOn=false;const TARGET_VOL=0.32;
+song.loop=true;song.volume=0;
+function fadeVol(to){(function s(){const d=to-song.volume;if(Math.abs(d)<0.012){song.volume=Math.max(0,Math.min(1,to));return;}song.volume=Math.max(0,Math.min(1,song.volume+d*0.08));requestAnimationFrame(s);})();}
+function audioPlay(){return song.play().then(()=>{audioOn=true;soundBtn.classList.add('on');fadeVol(TARGET_VOL);});}
+function toggleAudio(){
+  if(audioOn){fadeVol(0);setTimeout(()=>{if(!audioOn)song.pause();},450);audioOn=false;soundBtn.classList.remove('on');}
+  else{audioPlay().catch(()=>{});}
+}
+soundBtn.addEventListener('click',e=>{e.stopPropagation();toggleAudio();});
+function tryAutoplay(){
+  audioPlay().catch(()=>{
+    const once=()=>{audioPlay().catch(()=>{});document.removeEventListener('pointerdown',once);document.removeEventListener('keydown',once);};
+    document.addEventListener('pointerdown',once);document.addEventListener('keydown',once);
+  });
+}
+
 // ===== LOADER =====
 (function(){
   const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader');
@@ -416,7 +446,7 @@ if(window.Lenis){
   function done(){
     document.body.classList.add('ready');
     loader.classList.add('hide');
-    setTimeout(()=>{loader.style.display='none';document.body.classList.remove('loading');if(lenis)lenis.start();},1150);
+    setTimeout(()=>{loader.style.display='none';document.body.classList.remove('loading');if(lenis)lenis.start();tryAutoplay();},1150);
   }
   setTimeout(step,300);
 })();
