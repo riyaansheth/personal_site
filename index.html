@@ -47,6 +47,9 @@ a{color:inherit;}
 .ld-bar-wrap{width:min(440px,70vw);height:2px;background:rgba(193,0,48,0.15);margin-top:30px;overflow:hidden;}
 #ld-bar{height:100%;width:0;background:linear-gradient(90deg,var(--deep),var(--burg2));}
 .ld-lines{font-family:var(--mono);font-size:.62rem;color:var(--muted);letter-spacing:.12em;margin-top:24px;text-align:center;line-height:1.9;min-height:60px;}
+.ld-enter{font-family:var(--hud);font-weight:700;font-size:.82rem;letter-spacing:.24em;color:var(--burg2);text-transform:uppercase;opacity:0;transform:translateY(10px);transition:opacity .5s ease,transform .5s ease;}
+.ld-enter.show{opacity:1;transform:none;animation:pulse 1.9s ease infinite;}
+#loader.enterable{cursor:pointer;}
 
 /* NAV */
 nav{position:fixed;top:0;left:0;right:0;z-index:500;padding:0 30px;height:62px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);background:rgba(20,20,20,0.7);backdrop-filter:blur(14px);}
@@ -228,6 +231,7 @@ footer .ac{color:var(--burg2);}
   <div class="ld-num"><span id="ld-num">0</span><span>%</span></div>
   <div class="ld-bar-wrap"><div id="ld-bar"></div></div>
   <div class="ld-lines" id="ld-lines"></div>
+  <div class="ld-enter" id="ld-enter">&#9654; Click to enter</div>
 </div>
 
 <nav>
@@ -432,7 +436,7 @@ function tryAutoplay(){
 
 // ===== LOADER =====
 (function(){
-  const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader');
+  const num=document.getElementById('ld-num'),bar=document.getElementById('ld-bar'),lines=document.getElementById('ld-lines'),loader=document.getElementById('loader'),enterEl=document.getElementById('ld-enter');
   const msgs=['loading visuals','preparing experience','almost ready','welcome'];
   let p=0,li=0;
   function step(){
@@ -441,12 +445,21 @@ function tryAutoplay(){
     const want=Math.min(msgs.length,Math.ceil(p/100*msgs.length));
     while(li<want){lines.innerHTML+=msgs[li]+'<br/>';li++;}
     if(p<100)setTimeout(step,100+Math.random()*70);
-    else setTimeout(done,450);
+    else setTimeout(ready,350);
+  }
+  function ready(){
+    enterEl.classList.add('show');
+    loader.classList.add('enterable');
+    loader.addEventListener('click',enter,{once:true});
+  }
+  function enter(){
+    audioPlay().catch(()=>{});
+    done();
   }
   function done(){
     document.body.classList.add('ready');
     loader.classList.add('hide');
-    setTimeout(()=>{loader.style.display='none';document.body.classList.remove('loading');if(lenis)lenis.start();tryAutoplay();},1150);
+    setTimeout(()=>{loader.style.display='none';document.body.classList.remove('loading');if(lenis)lenis.start();},1150);
   }
   setTimeout(step,300);
 })();
