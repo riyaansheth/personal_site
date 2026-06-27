@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Riyaan Sheth // Skeuomorphism Theme Preview</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --felt:#3a2a1e; --accent:#7a0019; --accent2:#a8112f;
+    --card:#f3ece0; --card2:#e6dccb; --ink:#3b2f25; --muted:#857463;
+    --metal1:#fdfbf7; --metal2:#cdc3b4;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{
+    font-family:'Nunito',system-ui,sans-serif;color:var(--ink);
+    background:
+      radial-gradient(circle at 20% 0%,rgba(255,255,255,.05),transparent 40%),
+      repeating-conic-gradient(rgba(0,0,0,.025) 0% 25%,transparent 0% 50%) 0/8px 8px,
+      linear-gradient(160deg,#4a3526,#2e2016);
+    min-height:100vh;
+  }
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 18px;}
+
+  /* brushed metal nav */
+  nav{position:sticky;top:0;z-index:20;
+    background:linear-gradient(180deg,var(--metal1),var(--metal2));
+    border-bottom:1px solid #8d8273;
+    box-shadow:0 2px 5px rgba(0,0,0,.4),inset 0 1px 0 #fff;
+    padding:12px 18px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;}
+  .logo{font-weight:900;letter-spacing:.02em;color:#5a4636;font-size:1.15rem;
+    text-shadow:0 1px 0 #fff;display:flex;align-items:center;gap:9px;}
+  .logo .chip{width:30px;height:30px;border-radius:8px;background:linear-gradient(160deg,var(--accent2),var(--accent));
+    box-shadow:inset 0 1px 1px rgba(255,255,255,.5),inset 0 -3px 6px rgba(0,0,0,.4),0 2px 3px rgba(0,0,0,.4);
+    color:#fff;display:flex;align-items:center;justify-content:center;font-size:.8rem;text-shadow:0 1px 1px rgba(0,0,0,.5);}
+  nav ul{display:flex;gap:8px;list-style:none;flex-wrap:wrap;}
+  nav a{font-weight:700;font-size:.82rem;color:#5a4636;text-shadow:0 1px 0 #fff;padding:7px 13px;border-radius:8px;
+    background:linear-gradient(180deg,#fbf8f2,#ded3c2);border:1px solid #b3a895;
+    box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(0,0,0,.25);}
+  nav a:active{box-shadow:inset 0 2px 4px rgba(0,0,0,.35);}
+
+  /* glass card base */
+  .panel{
+    background:linear-gradient(180deg,var(--card),var(--card2));
+    border-radius:18px;border:1px solid #fff6;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.8),inset 0 -2px 8px rgba(0,0,0,.12),0 14px 28px rgba(0,0,0,.45);
+    padding:30px;position:relative;}
+  .stitch{position:absolute;inset:9px;border:2px dashed rgba(120,90,60,.35);border-radius:12px;pointer-events:none;}
+
+  .hero{padding:48px 18px 20px;text-align:center;}
+  .badge{display:inline-flex;align-items:center;gap:8px;font-weight:800;font-size:.78rem;color:#2e6b2e;
+    background:linear-gradient(180deg,#eafbe7,#c7ecc0);border:1px solid #9ccb95;border-radius:30px;padding:7px 16px;
+    box-shadow:inset 0 1px 0 #fff,0 2px 4px rgba(0,0,0,.3);}
+  .badge .led{width:9px;height:9px;border-radius:50%;background:radial-gradient(circle at 30% 30%,#9dff8a,#2ea024);
+    box-shadow:0 0 8px #5ee04a,inset 0 -1px 1px rgba(0,0,0,.4);}
+  .hero h1{font-weight:900;font-size:clamp(3rem,11vw,7rem);line-height:.92;margin:22px 0 6px;color:#efe6d6;
+    text-shadow:0 1px 0 #fff7,0 2px 0 #8a705a,0 6px 14px rgba(0,0,0,.6);letter-spacing:-.01em;}
+  .hero h1 .red{color:#f0d9d2;background:linear-gradient(180deg,var(--accent2),var(--accent));
+    -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;text-shadow:none;
+    filter:drop-shadow(0 2px 1px rgba(0,0,0,.4));}
+  .hero .role{color:#e7dccb;font-weight:700;letter-spacing:.04em;margin-top:8px;text-shadow:0 1px 2px rgba(0,0,0,.6);}
+
+  .btn{display:inline-block;font-weight:800;color:#fff;padding:14px 26px;border-radius:14px;margin:8px 6px 0;
+    background:linear-gradient(180deg,var(--accent2),var(--accent));border:1px solid #5a0014;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.45),inset 0 -3px 8px rgba(0,0,0,.35),0 6px 14px rgba(0,0,0,.45);
+    text-shadow:0 1px 1px rgba(0,0,0,.5);transition:transform .06s;}
+  .btn:active{transform:translateY(2px);box-shadow:inset 0 3px 7px rgba(0,0,0,.5);}
+  .btn.alt{background:linear-gradient(180deg,#fbf8f2,#d8ccba);color:#5a4636;border:1px solid #b3a895;text-shadow:0 1px 0 #fff;}
+
+  section{padding:34px 18px;}
+  .head{display:flex;align-items:center;gap:14px;margin-bottom:22px;}
+  .head .n{width:42px;height:42px;border-radius:11px;flex:none;font-weight:900;color:#fff;display:flex;align-items:center;justify-content:center;
+    background:linear-gradient(160deg,#6a5440,#43331f);box-shadow:inset 0 1px 0 rgba(255,255,255,.3),inset 0 -3px 6px rgba(0,0,0,.5),0 3px 6px rgba(0,0,0,.4);
+    text-shadow:0 1px 2px rgba(0,0,0,.6);}
+  .head h2{color:#efe6d6;font-weight:900;font-size:clamp(1.4rem,4vw,2.2rem);text-shadow:0 1px 0 #fff5,0 3px 8px rgba(0,0,0,.5);}
+
+  .about p{font-size:1.12rem;line-height:1.7;color:#473a2d;}
+  .about b{color:var(--accent);}
+
+  .grid{display:grid;gap:18px;}
+  .skills{grid-template-columns:repeat(auto-fit,minmax(230px,1fr));}
+  .skill h3{font-weight:900;font-size:1.05rem;}
+  .skill .lvl{font-size:.74rem;font-weight:800;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;margin:2px 0 12px;}
+  .gauge{height:14px;border-radius:10px;background:linear-gradient(180deg,#cabfae,#e6ddce);
+    box-shadow:inset 0 2px 4px rgba(0,0,0,.35),inset 0 -1px 0 #fff8;overflow:hidden;}
+  .gauge i{display:block;height:100%;border-radius:10px;background:linear-gradient(180deg,#bf3a52,var(--accent));
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5);}
+  .tags{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px;}
+  .tags span{font-size:.72rem;font-weight:700;padding:4px 11px;border-radius:20px;color:#5a4636;
+    background:linear-gradient(180deg,#fbf8f2,#e2d8c7);border:1px solid #c3b8a5;box-shadow:inset 0 1px 0 #fff,0 1px 2px rgba(0,0,0,.2);}
+
+  .work{grid-template-columns:repeat(auto-fit,minmax(300px,1fr));}
+  .proj .no{font-weight:900;font-size:2.2rem;color:#b6a994;text-shadow:0 1px 0 #fff;}
+  .proj h3{font-weight:900;font-size:1.05rem;margin:2px 0 10px;}
+  .proj p{font-size:.9rem;color:#5b4d3e;line-height:1.6;margin-bottom:14px;}
+  .live{position:absolute;top:16px;right:16px;font-size:.66rem;font-weight:800;color:#fff;padding:4px 11px;border-radius:20px;
+    background:linear-gradient(180deg,#34b24a,#1f8a37);border:1px solid #166a29;box-shadow:inset 0 1px 0 rgba(255,255,255,.4),0 2px 4px rgba(0,0,0,.3);text-shadow:0 1px 1px rgba(0,0,0,.4);}
+
+  .exp .item{display:flex;gap:16px;padding:16px 0;border-bottom:1px solid rgba(120,90,60,.25);}
+  .exp .item:last-child{border-bottom:none;}
+  .exp .when{font-weight:900;color:var(--accent);min-width:70px;}
+  .exp h3{font-weight:900;font-size:1rem;}
+  .exp .org{font-weight:700;color:var(--muted);font-size:.82rem;margin:2px 0 6px;}
+  .exp p{font-size:.88rem;color:#5b4d3e;}
+
+  .contact{text-align:center;}
+  .links{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:8px;}
+  footer{text-align:center;color:#cdbfae;padding:26px;font-size:.8rem;font-weight:700;text-shadow:0 1px 2px rgba(0,0,0,.6);}
+</style>
+</head>
+<body>
+  <nav>
+    <div class="logo"><span class="chip">RS</span>Riyaan Sheth</div>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#work">Work</a></li>
+      <li><a href="#exp">Experience</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+
+  <div class="hero">
+    <div class="wrap">
+      <span class="badge"><span class="led"></span>Available for hire</span>
+      <h1>RIYAAN <span class="red">SHETH</span></h1>
+      <div class="role">Full-Stack Developer / AI Builder / Freelancer</div>
+      <div>
+        <a class="btn" href="#work">View Work</a>
+        <a class="btn alt" href="#contact">Get in Touch</a>
+      </div>
+    </div>
+  </div>
+
+  <section id="about">
+    <div class="wrap">
+      <div class="head"><span class="n">01</span><h2>Profile</h2></div>
+      <div class="panel about"><span class="stitch"></span>
+        <p>I am a <b>Computer Science undergraduate</b> at Atlas SkillTech University. I do not wait for lectures. I build, ship, and learn by doing. From <b>cutting AWS cloud costs by 20%</b> at an AI startup to teaching robotics, I operate across the stack and across disciplines.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="skills">
+    <div class="wrap">
+      <div class="head"><span class="n">02</span><h2>Skills</h2></div>
+      <div class="grid skills">
+        <div class="panel skill"><h3>Frontend</h3><div class="lvl">Proficient</div><div class="gauge"><i style="width:80%"></i></div><div class="tags"><span>React.js</span><span>JavaScript</span><span>HTML/CSS</span></div></div>
+        <div class="panel skill"><h3>Backend</h3><div class="lvl">Proficient</div><div class="gauge"><i style="width:75%"></i></div><div class="tags"><span>Node.js</span><span>Flask</span><span>SQLite</span></div></div>
+        <div class="panel skill"><h3>AI / ML</h3><div class="lvl">Building</div><div class="gauge"><i style="width:65%"></i></div><div class="tags"><span>Python</span><span>RAG</span><span>LLM APIs</span></div></div>
+        <div class="panel skill"><h3>Cloud Ops</h3><div class="lvl">Experienced</div><div class="gauge"><i style="width:70%"></i></div><div class="tags"><span>AWS</span><span>Azure</span><span>Linux</span></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="work">
+    <div class="wrap">
+      <div class="head"><span class="n">03</span><h2>Active Builds</h2></div>
+      <div class="grid work">
+        <a class="panel proj" href="https://app.outreachtool.xyz/dashboard" target="_blank"><span class="live">LIVE</span><div class="no">01</div><h3>Lead Gen Email &amp; WhatsApp Automation</h3><p>Automated outbound lead generation across email and WhatsApp with AI generated messaging and follow up sequencing. Built at DIZRUPT.</p><div class="tags"><span>Python</span><span>WhatsApp API</span><span>LLM</span></div></a>
+        <a class="panel proj" href="https://paymentreconciliation-production.up.railway.app/" target="_blank"><span class="live">LIVE</span><div class="no">02</div><h3>Payment Reconciliation Tool</h3><p>Reconciles transactions across payment sources, flags mismatches, and automates matching of payments to invoices. Built at DIZRUPT.</p><div class="tags"><span>Python</span><span>Pandas</span><span>APIs</span></div></a>
+        <a class="panel proj" href="https://github.com/riyaansheth" target="_blank"><span class="live">LIVE</span><div class="no">03</div><h3>Google Review Bot</h3><p>Monitors and responds to Google business reviews automatically with context aware AI replies and sentiment trends. Built at DIZRUPT.</p><div class="tags"><span>Python</span><span>Google API</span><span>LLM</span></div></a>
+      </div>
+    </div>
+  </section>
+
+  <section id="exp">
+    <div class="wrap">
+      <div class="head"><span class="n">04</span><h2>Experience</h2></div>
+      <div class="panel exp"><span class="stitch"></span>
+        <div class="item"><div class="when">Now</div><div><h3>AI Automation Intern</h3><div class="org">DIZRUPT Digital LLP</div><p>Building AI driven automation tools for business operations. Shipped three tools to production.</p></div></div>
+        <div class="item"><div class="when">2024</div><div><h3>Cloud IT Engineer Intern</h3><div class="org">Farz AI</div><p>Managed AWS and Azure infrastructure for an AI startup. Cut cloud costs by 20%.</p></div></div>
+        <div class="item"><div class="when">2025</div><div><h3>Robotics Instructor</h3><div class="org">Atlas SkillTech University</div><p>Taught robotics fundamentals to summer camp students aged 16 to 18.</p></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="contact" class="contact">
+    <div class="wrap">
+      <div class="head" style="justify-content:center"><span class="n">05</span><h2>Get in Touch</h2></div>
+      <div>
+        <a class="btn" href="mailto:riyaansheth@gmail.com">Email Me</a>
+      </div>
+      <div class="links">
+        <a class="btn alt" href="https://www.linkedin.com/in/riyaansheth/" target="_blank">LinkedIn</a>
+        <a class="btn alt" href="https://github.com/riyaansheth" target="_blank">GitHub</a>
+        <a class="btn alt" href="tel:+919769079144">+91 97690 79144</a>
+      </div>
+    </div>
+  </section>
+
+  <footer>&copy; 2026 Riyaan Sheth // Based in Mumbai // Operating Globally</footer>
+</body>
+</html>
