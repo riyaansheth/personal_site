@@ -459,7 +459,7 @@ const RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 // ===== AUDIO =====
 const song=document.getElementById('song'),soundBtn=document.getElementById('sound');
-let audioOn=false,started=false,unlockArmed=false;const TARGET_VOL=0.32;
+let audioOn=false,started=false,unlockArmed=false,mutedRoll=false;const TARGET_VOL=0.32;
 song.loop=true;song.volume=TARGET_VOL;
 soundBtn.classList.add('pending');
 
@@ -491,28 +491,48 @@ document.addEventListener('pointerdown',()=>{if(started&&!actx)initAnalyser();if
 function fadeVol(to){(function s(){const d=to-song.volume;if(Math.abs(d)<0.012){song.volume=Math.max(0,Math.min(1,to));return;}song.volume=Math.max(0,Math.min(1,song.volume+d*0.08));requestAnimationFrame(s);})();}
 function markOn(){audioOn=true;started=true;soundBtn.classList.add('on');soundBtn.classList.remove('pending');}
 const UEV=['touchstart','pointerdown','keydown'];
+function goAudible(){mutedRoll=false;markOn();fadeVol(TARGET_VOL);removeUnlock();}
+function rollMuted(){
+  // autoplay with sound was blocked: keep the track rolling silently so the
+  // first gesture only has to unmute it, which is instant
+  song.muted=true;song.volume=TARGET_VOL;
+  const pr=song.play();
+  if(pr&&pr.then)pr.then(()=>{mutedRoll=true;}).catch(()=>{});
+  addUnlock();
+}
+function attemptAutoplay(){
+  if(started)return;
+  song.muted=false;song.volume=0;
+  const pr=song.play();
+  if(pr&&pr.then){
+    pr.then(()=>{
+      // some browsers resolve play() but pause on ungestured unmute; verify
+      setTimeout(()=>{if(!song.paused&&!song.muted)goAudible();else rollMuted();},60);
+    }).catch(rollMuted);
+  }else goAudible();
+}
 function unlock(e){
   if(started){removeUnlock();return;}
   if(e&&e.target&&e.target.closest&&e.target.closest('#sound'))return;
   initAnalyser();
+  if(mutedRoll&&!song.paused){song.volume=0;song.muted=false;goAudible();return;}
   song.muted=false;song.volume=0;
-  song.play().then(()=>{markOn();fadeVol(TARGET_VOL);removeUnlock();}).catch(()=>{});
+  song.play().then(()=>{goAudible();}).catch(()=>{});
 }
 function addUnlock(){if(unlockArmed)return;unlockArmed=true;UEV.forEach(ev=>document.addEventListener(ev,unlock,{passive:true}));}
 function removeUnlock(){unlockArmed=false;UEV.forEach(ev=>document.removeEventListener(ev,unlock));}
-function enableAudio(){
-  song.muted=false;song.volume=0;
-  const pr=song.play();
-  if(pr&&pr.then){pr.then(()=>{markOn();fadeVol(TARGET_VOL);}).catch(()=>addUnlock());}
-  else{markOn();fadeVol(TARGET_VOL);}
-}
 function toggleAudio(){
   if(audioOn){fadeVol(0);setTimeout(()=>{if(!audioOn)song.pause();},450);audioOn=false;soundBtn.classList.remove('on');}
-  else{initAnalyser();song.muted=false;song.volume=0;song.play().then(()=>{markOn();fadeVol(TARGET_VOL);}).catch(()=>{});}
+  else{initAnalyser();
+    if(mutedRoll&&!song.paused){song.volume=0;song.muted=false;goAudible();return;}
+    song.muted=false;song.volume=0;song.play().then(()=>{markOn();fadeVol(TARGET_VOL);}).catch(()=>{});}
 }
 soundBtn.addEventListener('click',e=>{e.stopPropagation();toggleAudio();});
 // arm first-interaction unlock from the start so a cold load still starts on first tap/click
 addUnlock();
+// fire the play attempt the moment the script runs: audible immediately when the
+// browser allows it, otherwise the track rolls muted and unmutes on first gesture
+attemptAutoplay();
 
 // ===== LOADER =====
 (function(){
@@ -528,7 +548,7 @@ addUnlock();
     else setTimeout(done,400);
   }
   function done(){
-    enableAudio();
+    attemptAutoplay();
     document.body.classList.add('ready');
     loader.classList.add('hide');
     const fl=document.getElementById('flash');
