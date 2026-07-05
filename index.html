@@ -528,8 +528,10 @@ function attemptAutoplay(){
 }
 function unlock(e){
   if(started){removeUnlock();return;}
+  if(!document.body.classList.contains('ready'))return; // music starts only once the loader is gone
   if(e&&e.target&&e.target.closest&&e.target.closest('#sound'))return;
   initAnalyser();
+  song.currentTime=0;
   if(mutedRoll&&!song.paused){song.volume=0;song.muted=false;goAudible();return;}
   song.muted=false;song.volume=0;
   song.play().then(()=>{goAudible();}).catch(()=>{});
@@ -543,11 +545,9 @@ function toggleAudio(){
     song.muted=false;song.volume=0;song.play().then(()=>{markOn();fadeVol(TARGET_VOL);}).catch(()=>{});}
 }
 soundBtn.addEventListener('click',e=>{e.stopPropagation();toggleAudio();});
-// arm first-interaction unlock from the start so a cold load still starts on first tap/click
-addUnlock();
-// fire the play attempt the moment the script runs: audible immediately when the
-// browser allows it, otherwise the track rolls muted and unmutes on first gesture
-attemptAutoplay();
+// roll the track muted from page load so it is buffered and mid-pipeline;
+// it becomes audible exactly when the loader finishes (see done())
+rollMuted();
 
 // ===== LOADER =====
 (function(){
@@ -563,6 +563,7 @@ attemptAutoplay();
     else setTimeout(done,400);
   }
   function done(){
+    if(!started)try{song.currentTime=0;}catch(e){}
     attemptAutoplay();
     document.body.classList.add('ready');
     loader.classList.add('hide');
