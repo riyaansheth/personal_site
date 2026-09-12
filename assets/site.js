@@ -11,6 +11,27 @@
     setInterval(updateTime, 60000);
   }
 
+  const root = document.documentElement;
+  const themeButton = document.querySelector('.theme-toggle');
+  const themeMeta = document.querySelector('meta[name=theme-color]');
+  const setTheme = dark => {
+    root.dataset.theme = dark ? 'dark' : 'light';
+    themeMeta?.setAttribute('content', dark ? '#0f141b' : '#f8f9fc');
+    if (!themeButton) return;
+    const label = dark ? 'Switch to light mode' : 'Switch to dark mode';
+    themeButton.setAttribute('aria-pressed', String(dark));
+    themeButton.setAttribute('aria-label', label);
+    themeButton.title = label;
+    themeButton.innerHTML = `<i data-lucide="${dark ? 'sun' : 'moon'}" aria-hidden="true"></i>`;
+    icons();
+  };
+  setTheme(root.dataset.theme === 'dark');
+  themeButton?.addEventListener('click', () => {
+    const dark = root.dataset.theme !== 'dark';
+    setTheme(dark);
+    try { localStorage.setItem('theme', dark ? 'dark' : 'light'); } catch (_) { /* private mode */ }
+  });
+
   const menuButton = document.querySelector('.menu-toggle');
   const mobileNav = document.querySelector('#mobile-nav');
   const setMenu = open => {
